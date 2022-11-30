@@ -13,7 +13,7 @@ const ast = (code: string, filePath: string) => {
     console.log('🚀 ~ file: ast.ts ~ line 15 ~ ast ~ code', code)
     const p = path.parse(filePath)
     const fileName = p?.name || ''
-    const keyPrefix = fileName.slice(0, 1).toUpperCase() + fileName.slice(1).toLowerCase()
+    const keyPrefix = fileName.slice(0, 1).toUpperCase() + fileName.slice(1, fileName.length - 1)
     const Ast = babylon.parse(code, {
         sourceType: 'module',
         plugins: ['jsx', 'typescript'], //这里是要用到的插件，文中插件未用到
