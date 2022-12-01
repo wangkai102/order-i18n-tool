@@ -14,6 +14,7 @@
     "onCommand:order-i18n-tool.addUseLang"
   ],
   "main": "./dist/extension.js",
+  "publisher": "kid",
   "contributes": {
     "commands": [
       {
