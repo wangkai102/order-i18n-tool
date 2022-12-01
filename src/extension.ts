@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import ast from './utils/ast'
 import { geti18nPath } from './utils/path'
 import { getUseLangText, insterI18nContent } from './utils/tool'
-import { insertToFilePosition, readFile, writeFile } from './utils/vscodeApis'
+import { insertToCurFilePosition, insertToFilePosition, readFile, writeFile } from './utils/vscodeApis'
 
 export function activate(context: vscode.ExtensionContext) {
     let autoI18n = vscode.commands.registerCommand('order-i18n-tool.autoI18n', () => {
@@ -32,8 +32,8 @@ export function activate(context: vscode.ExtensionContext) {
         const position = vscode.window.activeTextEditor?.selection.active
         if (filePath && position) {
             const text = getUseLangText(filePath)
-            if(text){
-                insertToFilePosition(filePath, position, text)
+            if (text) {
+                insertToCurFilePosition(position, text)
             }
         }
         // vscode.window.activeTextEditor?.document.

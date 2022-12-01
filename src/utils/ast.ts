@@ -13,7 +13,7 @@ const ast = (code: string, filePath: string) => {
     console.log('🚀 ~ file: ast.ts ~ line 15 ~ ast ~ code', code)
     const p = path.parse(filePath)
     const fileName = p?.name || ''
-    const keyPrefix = fileName.slice(0, 1).toUpperCase() + fileName.slice(1, fileName.length - 1)
+    const keyPrefix = fileName.slice(0, 1).toUpperCase() + fileName.slice(1, fileName.length)
     const Ast = babylon.parse(code, {
         sourceType: 'module',
         plugins: ['jsx', 'typescript'], //这里是要用到的插件，文中插件未用到
@@ -23,9 +23,9 @@ const ast = (code: string, filePath: string) => {
         enter(path: any) {
             const value = path.node.value
             if ((path.node.type === 'JSXText' || path.node.type === 'StringLiteral') && chineseReg.test(value)) {
-                //判断require是否本身包含default
                 if (chineseReg.test(value)) {
-                    i18nArr.push(value)
+                    const replaceValue = value?.replaceAll('\n', '').trim() || value
+                    i18nArr.push(replaceValue)
                 }
             }
         },
@@ -46,7 +46,8 @@ const ast = (code: string, filePath: string) => {
                 }
                 const value = path.node.value
                 if ((path.node.type === 'JSXText' || path.node.type === 'StringLiteral') && chineseReg.test(value)) {
-                    const findRes = translateArr.find((item) => item.src === value)
+                    const replaceValue = value?.replaceAll('\n', '').trim() || value
+                    const findRes = translateArr.find((item) => item.src === replaceValue)
                     index++
                     let key = `${keyPrefix}_Translate_Error_${index}`
                     if (findRes?.dst) {
@@ -61,9 +62,13 @@ const ast = (code: string, filePath: string) => {
                             })
                             .slice(0, 5)
                             .join('')
+                            .replace(/\W/g, '_')
+                        if (key.endsWith('_')) {
+                            key = key.slice(0, key.length - 1)
+                        }
                         key = `${keyPrefix}_${key}`
                     }
-                    i18nContent[key] = value
+                    i18nContent[key] = replaceValue
                     if (path.node.type === 'JSXText') {
                         const jsxLangAst = t.jsxExpressionContainer(t.identifier(`lang['${key}']`))
                         path.replaceWith(jsxLangAst)
