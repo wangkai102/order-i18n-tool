@@ -101,6 +101,7 @@ const ast = (code: string, filePath: string) => {
             code
         )
         console.log('🚀 ~ file: ast.ts ~ line 88 ~ ast ~ generate', result)
+        // @ts-ignore
         const prettierCode = prettier.format(result.code, { ...prettierRules, parser: 'babel-ts' })
         console.log('🚀 ~ file: ast.ts ~ line 88 ~ ast ~ prettierCode', prettierCode)
         return { code: prettierCode, i18nContent }

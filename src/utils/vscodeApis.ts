@@ -21,7 +21,7 @@ export const writeFile = async (filePath: string | undefined, data: string) => {
     if (!filePath || !data) {
         return
     }
-    await vscode.workspace.fs.writeFile(vscode.Uri.file(filePath), Buffer.from(data), { create: true, overwrite: true })
+    await vscode.workspace.fs.writeFile(vscode.Uri.file(filePath), Buffer.from(data))
 }
 
 
