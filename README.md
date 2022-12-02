@@ -5,7 +5,9 @@
 ## Features
 
 在order项目中在打开编辑器中右键 
+
 使用Auto I18n命令可快速将代码中的中文转换为lang['xxx']
+
 使用Add useLang命令可在光标处添加该文件对useLang的引用
 
 
@@ -16,7 +18,12 @@
 ### 0.0.2
 
 Added i18n代码转换功能
+
 Added i18n useLang添加功能
+---
+### 0.0.3
+
+汉字字数限制为90，太长翻译api不支持
 ---
 
 ## Following extension guidelines
