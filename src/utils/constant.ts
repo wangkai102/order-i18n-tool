@@ -1,4 +1,5 @@
 export const chineseReg = /[\u4e00-\u9fa5]+/
+export const MAX_LENGTH = 90
 export const prettierRules = {
     // 一行最多 100 字符
     printWidth: 120,

@@ -5,7 +5,7 @@ import * as prettier from 'prettier'
 import * as t from '@babel/types'
 import template from '@babel/template'
 import * as path from 'path'
-import { chineseReg, prettierRules } from './constant'
+import { chineseReg, MAX_LENGTH, prettierRules } from './constant'
 import { translate } from './translate'
 
 const ast = (code: string, filePath: string) => {
@@ -22,7 +22,11 @@ const ast = (code: string, filePath: string) => {
     traverse(Ast, {
         enter(path: any) {
             const value = path.node.value
-            if ((path.node.type === 'JSXText' || path.node.type === 'StringLiteral') && chineseReg.test(value)) {
+            if (
+                (path.node.type === 'JSXText' || path.node.type === 'StringLiteral') &&
+                chineseReg.test(value) &&
+                value.length <= MAX_LENGTH
+            ) {
                 if (chineseReg.test(value)) {
                     const replaceValue = value?.replaceAll('\n', '').trim() || value
                     i18nArr.push(replaceValue)
@@ -45,7 +49,11 @@ const ast = (code: string, filePath: string) => {
                     }
                 }
                 const value = path.node.value
-                if ((path.node.type === 'JSXText' || path.node.type === 'StringLiteral') && chineseReg.test(value)) {
+                if (
+                    (path.node.type === 'JSXText' || path.node.type === 'StringLiteral') &&
+                    chineseReg.test(value) &&
+                    value.length <= MAX_LENGTH
+                ) {
                     const replaceValue = value?.replaceAll('\n', '').trim() || value
                     const findRes = translateArr.find((item) => item.src === replaceValue)
                     index++
