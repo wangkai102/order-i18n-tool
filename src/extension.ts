@@ -36,8 +36,6 @@ export function activate(context: vscode.ExtensionContext) {
                 insertToCurFilePosition(position, text)
             }
         }
-        // vscode.window.activeTextEditor?.document.
-        // addUseLang(filePath)
     })
 
     context.subscriptions.push(autoI18n)
