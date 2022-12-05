@@ -25,6 +25,10 @@ Added i18n useLang添加功能
 
 汉字字数限制为90，太长翻译api不支持
 ---
+### 0.0.4
+
+处理非页面路径下文件路径计算
+---
 
 ## Following extension guidelines
 
