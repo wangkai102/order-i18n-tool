@@ -1,6 +1,7 @@
 # order-i18n-tool README
 
-针对项目自用
+vscode 插件 针对项目自用
+项目地址：https://marketplace.visualstudio.com/items?itemName=kid.order-i18n-tool
 
 ## Features
 
