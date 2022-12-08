@@ -6,7 +6,7 @@ export const geti18nPath = (sourcePath: string) => {
     let dir = parseRes?.dir?.replace(/\\\\/g, '/').replace(/\\/g, '/')
     console.log('🚀 ~ file: path.ts ~ line 7 ~ geti18nPath ~ dir', dir)
     if (dir as string) {
-        if(dir.endsWith('pages')){
+        if (dir.endsWith('pages')) {
             dir += '/main/layout'
         }
         if (dir.endsWith('main')) {

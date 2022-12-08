@@ -35,3 +35,9 @@ export const getUseLangText = (sourcePath: string | undefined) => {
     const text = `\n    const lang = useLang('${fileName}', '${path}')`
     return text
 }
+
+export const getOriganlI18nContent = () => {
+    return import('./resource_zh_cn').then((res) => {
+        return res.default
+    })
+}

@@ -5,10 +5,11 @@ import * as prettier from 'prettier'
 import * as t from '@babel/types'
 import template from '@babel/template'
 import * as path from 'path'
+import { get } from 'lodash'
 import { chineseReg, MAX_LENGTH, prettierRules } from './constant'
 import { translate } from './translate'
 
-const ast = (code: string, filePath: string) => {
+export const chinese2Lang = (code: string, filePath: string, resource: any) => {
     if (!code) return
     console.log('🚀 ~ file: ast.ts ~ line 15 ~ ast ~ code', code)
     const p = path.parse(filePath)
@@ -42,7 +43,7 @@ const ast = (code: string, filePath: string) => {
         let index = 0
         traverse(Ast, {
             enter(path: any) {
-                if (path.node.type !== 'ImportSpecifier' && path.node.imported?.name !== 'useLang') {
+                if (path.node.imported?.name !== 'useLang') {
                     const importAst = template.ast(`import { useLang, useImage, useStyle, getLang } from '@/i18n/i18n'`)
                     if (t.isProgram(path.node)) {
                         path.node.body.unshift(importAst)
@@ -96,6 +97,25 @@ const ast = (code: string, filePath: string) => {
                         }
                     }
                 }
+                // 处理_t2Lang
+                if (path.node.type === 'Identifier' && path.node.name === '_t') {
+                    // @ts-ignore
+                    const value = path.parent.arguments?.[0].value
+                    console.log('🚀 ~ file: ast.ts:136 ~ enter ~ value', value)
+                    if (value) {
+                        const chinese = get(resource, value)
+                        const key = `${keyPrefix}_${value.replaceAll('.', '_')}`
+                        i18nContent[key] = chinese
+                        const langTemp = template(`%%LANG%%[%%LANG_NAME%%]`)
+                        const langAst = langTemp({
+                            LANG: t.identifier('lang'),
+                            LANG_NAME: t.stringLiteral(key),
+                        })
+                        // 替换父节点为langAst
+                        // @ts-ignore
+                        path.parentPath.replaceWith(langAst)
+                    }
+                }
             },
         })
         console.log('🚀 ~ file: ast.ts ~ line 88 ~ ast ~ Ast', Ast)
@@ -116,4 +136,53 @@ const ast = (code: string, filePath: string) => {
     })
 }
 
-export default ast
+// export const _t2Lang = (code: string, filePath: string, resource: any) => {
+//     if (!code) return
+//     console.log('🚀 ~ file: ast.ts ~ line 15 ~ ast ~ code', code)
+//     const p = path.parse(filePath)
+//     const fileName = p?.name || ''
+//     const keyPrefix = fileName.slice(0, 1).toUpperCase() + fileName.slice(1, fileName.length)
+//     const Ast = babylon.parse(code, {
+//         sourceType: 'module',
+//         plugins: ['jsx', 'typescript'], //这里是要用到的插件，文中插件未用到
+//     })
+//     const i18nContent: any = {}
+//     traverse(Ast, {
+//         enter(path) {
+//             if (path.node.type === 'Identifier' && path.node.name === '_t') {
+//                 // @ts-ignore
+//                 const value = path.parent.arguments?.[0].value
+//                 console.log('🚀 ~ file: ast.ts:136 ~ enter ~ value', value)
+//                 if (value) {
+//                     const chinese = get(resource, value)
+//                     const key = `${keyPrefix}_${value.replaceAll('.', '_')}`
+//                     i18nContent[key] = chinese
+//                     const langTemp = template(`%%LANG%%[%%LANG_NAME%%]`)
+//                     const langAst = langTemp({
+//                         LANG: t.identifier('lang'),
+//                         LANG_NAME: t.stringLiteral(key),
+//                     })
+//                     // 替换父节点为langAst
+//                     // @ts-ignore
+//                     path.parentPath.replaceWith(langAst)
+//                 }
+//             }
+//         },
+//     })
+//     console.log('🚀 ~ file: ast.ts ~ line 88 ~ ast ~ Ast', Ast)
+//     const result = generate(
+//         Ast,
+//         {
+//             compact: true,
+//             retainLines: true,
+//             minified: true,
+//         },
+//         code
+//     )
+//     console.log('🚀 ~ file: ast.ts ~ line 88 ~ ast ~ generate', result)
+//     // @ts-ignore
+//     const prettierCode = prettier.format(result.code, { ...prettierRules, parser: 'babel-ts' })
+//     console.log('🚀 ~ file: ast.ts ~ line 88 ~ ast ~ prettierCode', prettierCode)
+//     console.log('🚀 ~ file: ast.ts ~ line 88 ~ ast ~ i18nContent', i18nContent)
+//     return { code: prettierCode, i18nContent }
+// }
