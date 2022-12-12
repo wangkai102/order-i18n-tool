@@ -34,6 +34,10 @@ Added i18n useLang添加功能
 
 处理原来_t函数的转换，包含原来翻译的汉字提取与写入
 
+### 0.0.6
+
+bug fix
+
 ## Following extension guidelines
 
 * [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
