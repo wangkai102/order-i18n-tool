@@ -27,7 +27,7 @@ export const geti18nPath = (sourcePath: string) => {
         } else {
             const r = arr.slice(findIndex + 1, findIndex + 2)
             r[r.length - 1] = `${r[r.length - 1]}.json`
-            const i18nPath = [...start, 'i18n', 'resource', 'zh-cn', ...r].join('/')
+            const i18nPath = [...start, 'i18n', 'resource', 'zh-cn', 'lang', ...r].join('/')
             console.log('🚀 ~ file: path.ts ~ line 29 ~ geti18nPath ~ i18nPath', i18nPath)
             return i18nPath
         }
